@@ -6,7 +6,6 @@ import org.jetbrains.anko.db.*
 
 class SQLiteDatabseHandler (ctx: Context) : ManagedSQLiteOpenHelper(ctx, "EventTable.db", null, 1){
     override fun onCreate(db: SQLiteDatabase?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         db?.createTable(EventTable.EVENT_TABLE, true,
             EventTable.ID to TEXT + PRIMARY_KEY,
             EventTable.DATE to TEXT,
@@ -16,7 +15,6 @@ class SQLiteDatabseHandler (ctx: Context) : ManagedSQLiteOpenHelper(ctx, "EventT
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         db?.dropTable(EventTable.EVENT_NAME, true)
     }
 
