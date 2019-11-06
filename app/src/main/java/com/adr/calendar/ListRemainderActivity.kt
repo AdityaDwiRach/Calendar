@@ -22,6 +22,7 @@ class ListRemainderActivity : AppCompatActivity() {
         recycleView.setAdapter(adapterRV)
         recycleView.layoutManager = LinearLayoutManager(this)
         getData()
+        adapterRV.notifyDataSetChanged()
     }
 
     private fun getData() {

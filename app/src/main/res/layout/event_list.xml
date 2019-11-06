@@ -18,6 +18,8 @@
                 android:id="@+id/eventDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text="tanggal">
             </TextView>
 
@@ -25,6 +27,7 @@
                 android:id="@+id/eventMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingRight="10dp"
                 android:text="bulan">
             </TextView>
 
@@ -32,6 +35,7 @@
                 android:id="@+id/eventYear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingRight="10dp"
                 android:text="tahun">
             </TextView>
 
@@ -41,6 +45,8 @@
             android:id="@+id/eventName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="nama">
         </TextView>
 
