@@ -28,8 +28,8 @@ class ListRemainderActivity : AppCompatActivity() {
     private fun getData() {
         database.use{
             eventTable.clear()
-            var result = select(EventTable.EVENT_TABLE)
-            var eventData = result.parseList(classParser<EventTable>())
+            val result = select(EventTable.EVENT_TABLE)
+            val eventData = result.parseList(classParser<EventTable>())
             eventTable.addAll(eventData)
             adapterRV.notifyDataSetChanged()
         }

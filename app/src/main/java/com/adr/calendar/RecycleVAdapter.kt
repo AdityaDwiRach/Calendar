@@ -45,6 +45,8 @@ class RecycleVAdapter(val context: Context, val items: ArrayList<EventTable>) : 
             intent.putExtra("oldMonth", holder.eventMonth)
             intent.putExtra("oldYear", holder.eventYear)
             intent.putExtra("oldEventName", holder.eventName)
+            intent.putExtra("oldHour", holder.eventHour)
+            intent.putExtra("oldMinute", holder.eventMinute)
             startActivity(context, intent, null)
         }
 
@@ -56,16 +58,22 @@ class RecycleVAdapter(val context: Context, val items: ArrayList<EventTable>) : 
         var eventMonth: String? = null
         var eventYear: String? = null
         var eventName: String? = null
+        var eventHour: String? = null
+        var eventMinute: String? = null
 
         fun bindItems(items: EventTable){
             itemView.eventDate.text = items.date
             itemView.eventMonth.text = items.month
             itemView.eventYear.text = items.year
             itemView.eventName.text = items.event_name
+            itemView.eventHour.text = items.hour
+            itemView.eventMinute.text = items.minute
             eventDate = items.date
             eventMonth = items.month
             eventYear = items.year
             eventName = items.event_name
+            eventHour = items.hour
+            eventMinute = items.minute
         }
 
         fun delete(){

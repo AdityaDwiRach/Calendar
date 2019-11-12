@@ -25,8 +25,8 @@ import androidx.core.app.ComponentActivity
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
+import kotlinx.android.synthetic.main.select_time.*
+import org.jetbrains.anko.toast
 
 
 class MainActivity : AppCompatActivity() {
@@ -39,6 +39,10 @@ class MainActivity : AppCompatActivity() {
     private var setOldDate: String? = null
     private var setOldMonth: String? = null
     private var setOldYear: String? = null
+    private var setOldHour: String? = null
+    private var setOldMinute: String? = null
+    private var hour = 0
+    private var minute = 0
 
     //cari cara untuk locaization array
     private var arrayOfMonth = arrayOf("January", "February", "March", "April", "Mei", "June", "July", "August", "September", "October", "November", "December")
@@ -50,7 +54,9 @@ class MainActivity : AppCompatActivity() {
         val oldDate = intent.getStringExtra("oldDate")
         val oldMonth = intent.getStringExtra("oldMonth")
         val oldYear = intent.getStringExtra("oldYear")
-        var oldEventName = intent.getStringExtra("oldEventName")
+        val oldEventName = intent.getStringExtra("oldEventName")
+        val oldHour = intent.getStringExtra("oldHour")
+        val oldMinute = intent.getStringExtra("oldMinute")
 
         if (oldEventName == null){
             buttonUpdateEventList.isEnabled = false
@@ -60,6 +66,8 @@ class MainActivity : AppCompatActivity() {
             setOldDate = oldDate
             setOldMonth = oldMonth
             setOldYear = oldYear
+            setOldHour = oldHour
+            setOldMinute = oldMinute
             Log.i("Testiiiiiing", oldDate + oldMonth + oldYear + oldEventName)
             setDateAfterUpdate()
         }
@@ -105,14 +113,29 @@ class MainActivity : AppCompatActivity() {
             val layoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val pickers = layoutInflater.inflate(R.layout.select_time, null)
             val time = pickers.findViewById(R.id.timePicker1) as TimePicker
-//            val repeat_daily = pickers.findViewById(R.id.repeat_daily) as CheckBox
+            time.is24HourView
             dialog.setView(pickers)
             dialog.setPositiveButton("Ok") { dialog, which ->
                 time.clearFocus()
-                val hour = time.currentHour
-                val minute = time.currentMinute
+                if (oldEventName == null){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        hour = time.hour
+                        minute = time.minute
+                    } else {
+                        hour = time.currentHour
+                        minute = time.currentMinute
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        oldHour = time.hour
+                        minute = time.minute
+                    } else {
+                        hour = time.currentHour
+                        minute = time.currentMinute
+                    }
+                }
 
-                Toast.makeText(this, "Selected time : $hour : $minute", Toast.LENGTH_LONG).show()
+//                Toast.makeText(this, "Selected time : $hour : $minute", Toast.LENGTH_LONG).show()
 
 //                Notification.getTime(hour, minute, repeat_daily.isChecked)
 //                Notification.scheduleNotification(this@AgendaActivity, 1)
@@ -123,6 +146,10 @@ class MainActivity : AppCompatActivity() {
 
             val alertDialog = dialog.create()
             alertDialog.show()
+
+            pickers.buttonCheck.setOnClickListener {
+                toast("Selected time : $hour : $minute")
+            }
 
         }
 
