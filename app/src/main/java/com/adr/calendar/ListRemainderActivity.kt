@@ -34,12 +34,4 @@ class ListRemainderActivity : AppCompatActivity() {
             adapterRV.notifyDataSetChanged()
         }
     }
-
-//    private fun removeData(){
-//        database.use {
-//            val position
-//            eventTable.remove(position)
-//            adapterRV.notifyItemRemoved(position)
-//        }
-//    }
 }
