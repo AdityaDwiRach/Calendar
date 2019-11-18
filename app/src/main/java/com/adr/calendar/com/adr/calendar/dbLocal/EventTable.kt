@@ -1,14 +1,19 @@
 package com.adr.calendar.com.adr.calendar.dbLocal
 
-data class EventTable (var id: Long?, var date: String?, var month: String?, var year: String?, var event_name: String?, var hour: String?, var minute: String?){
-    companion object {
-        const val EVENT_TABLE:String = "EVENT_TABLE"
-        const val ID:String = "ID"
-        const val DATE:String = "DATE"
-        const val MONTH:String = "MONTH"
-        const val YEAR:String = "YEAR"
-        const val EVENT_NAME:String = "EVENT_NAME"
-        const val HOUR:String = "HOUR"
-        const val MINUTE:String = "MINUTE"
-    }
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.io.Serializable
+
+@Entity(tableName = "eventtable")
+data class EventTable(
+    val date: String,
+    val month: String,
+    val year: String,
+    val event_name: String,
+    val hour: String,
+    val minute: String,
+    val time_full: String
+):Serializable{
+    @PrimaryKey(autoGenerate = true)
+    var id : Int = 0
 }

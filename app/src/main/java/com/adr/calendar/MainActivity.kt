@@ -12,40 +12,42 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
-import com.adr.calendar.com.adr.calendar.dbLocal.database
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.select_time.view.*
-import org.jetbrains.anko.db.insert
-import org.jetbrains.anko.db.update
-import org.jetbrains.anko.startActivity
 import java.util.*
 import android.content.DialogInterface
+import android.content.Intent
 import android.widget.CheckBox
 import androidx.core.app.ComponentActivity
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.provider.SyncStateContract.Helpers.update
+import com.adr.calendar.com.adr.calendar.dbLocal.EventTableDatabase
 import kotlinx.android.synthetic.main.select_time.*
-import org.jetbrains.anko.toast
+import kotlinx.coroutines.launch
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private var currentDate: Long = 0
     private var currentDayOfMonth = 0
     private var currentMonth = 0
     private var currentYear = 0
-    private var currentEventName = null
+    private var currentEventName: String? = null
     private var setOldDate: String? = null
     private var setOldMonth: String? = null
     private var setOldYear: String? = null
-    private var setOldHour: String? = null
-    private var setOldMinute: String? = null
+    private var setOldHour = 0
+    private var setOldMinute = 0
     private var currentHour = 0
     private var currentMinute = 0
+    private var statusUpdate = false
 
     //cari cara untuk locaization array
     private var arrayOfMonth = arrayOf("January", "February", "March", "April", "Mei", "June", "July", "August", "September", "October", "November", "December")
+
+    private var eventTable: EventTable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +59,10 @@ class MainActivity : AppCompatActivity() {
         val oldEventName = intent.getStringExtra("oldEventName")
         val oldHour = intent.getStringExtra("oldHour")
         val oldMinute = intent.getStringExtra("oldMinute")
+        val oldID = intent.getIntExtra("oldID", 0)
+        statusUpdate = intent.getBooleanExtra("statusUpdate", false)
 
-        if (oldEventName == null){
+        if (!statusUpdate){
             buttonUpdateEventList.isEnabled = false
         } else {
             buttonSave.isEnabled = false
@@ -66,8 +70,8 @@ class MainActivity : AppCompatActivity() {
             setOldDate = oldDate
             setOldMonth = oldMonth
             setOldYear = oldYear
-            setOldHour = oldHour
-            setOldMinute = oldMinute
+            setOldHour = oldHour!!.toInt()
+            setOldMinute = oldMinute!!.toInt()
             Log.i("Testiiiiiing", oldDate + oldMonth + oldYear + oldEventName)
             setDateAfterUpdate()
         }
@@ -85,34 +89,43 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonSave.setOnClickListener{
-            addData()
-            toast(currentHour.toString() + currentMinute.toString())
-            clearData()
-        }
-
-        buttonDeleteAll.setOnClickListener {
-            database.use {
-                delete("EVENT_TABLE",null,null)
+            currentEventName = editTextEventName.text.toString()
+//            addData()
+            launch {
+                val date = currentDayOfMonth.toString()
+                val month = arrayOfMonth[currentMonth]
+                val year = currentYear.toString()
+                val hour = currentHour.toString()
+                val minute = currentMinute.toString()
+                val timeFull = "$date $month $year $hour : $minute"
+                val eventName = currentEventName.toString()
+                val mEventTable = EventTable(date, month, year, eventName, hour, minute, timeFull)
+                EventTableDatabase(this@MainActivity).getEventTableDao().addData(mEventTable)
+                Toast.makeText(this@MainActivity, "Data saved", Toast.LENGTH_SHORT).show()
             }
+            Toast.makeText(this, currentHour.toString() + currentMinute.toString(), Toast.LENGTH_SHORT).show()
+            clearData()
         }
         
         buttonEventList.setOnClickListener{
-            startActivity<ListRemainderActivity>()
+            startActivity(Intent(this, ListRemainderActivity::class.java))
+            finish()
         }
 
         buttonUpdateEventList.setOnClickListener{
-            database.use {
-                update(EventTable.EVENT_TABLE,
-                    EventTable.EVENT_NAME to editTextEventName.text.toString(),
-                    EventTable.DATE to currentDayOfMonth,
-                    EventTable.MONTH to currentMonth,
-                    EventTable.YEAR to currentYear,
-                    EventTable.HOUR to currentHour,
-                    EventTable.MINUTE to currentMinute
-                )
-                    .whereArgs("${EventTable.EVENT_NAME} = {eventName}",
-                    "eventName" to oldEventName)
-                    .exec()
+            currentEventName = editTextEventName.text.toString()
+            launch {
+                val date = currentDayOfMonth.toString()
+                val month = arrayOfMonth[currentMonth]
+                val year = currentYear.toString()
+                val hour = currentHour.toString()
+                val minute = currentMinute.toString()
+                val timeFull = "$date $month $year $hour : $minute"
+                val eventName = currentEventName.toString()
+                val mEventTable = EventTable(date, month, year, eventName, hour, minute, timeFull)
+                mEventTable.id = oldID
+                EventTableDatabase(it.context).getEventTableDao().updateData(mEventTable)
+                Toast.makeText(it.context, "Data updated", Toast.LENGTH_SHORT).show()
             }
             clearData()
         }
@@ -142,32 +155,23 @@ class MainActivity : AppCompatActivity() {
             }
 
             pickers.buttonCheck.setOnClickListener {
-                toast("Selected time : $currentHour : $currentMinute")
+                Toast.makeText(this, "Selected time : $currentHour : $currentMinute", Toast.LENGTH_SHORT).show()
             }
 
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    private fun addData() {
-        database.use {
-            insert(EventTable.EVENT_TABLE,
-                EventTable.EVENT_NAME to editTextEventName.text.toString(),
-                EventTable.DATE to currentDayOfMonth.toString(),
-                EventTable.MONTH to arrayOfMonth[currentMonth],
-                EventTable.YEAR to currentYear.toString(),
-                EventTable.HOUR to currentHour.toString(),
-                EventTable.MINUTE to currentMinute.toString()
-            )
         }
     }
 
     private fun clearData(){
         editTextEventName.text.clear()
         calendarView.date = currentDate
+        statusUpdate = false
+        if (!statusUpdate){
+            buttonUpdateEventList.isEnabled = false
+            buttonSave.isEnabled = true
+        } else {
+            buttonSave.isEnabled = false
+            buttonUpdateEventList.isEnabled = true
+        }
     }
 
     private fun setDateAfterUpdate(){
@@ -184,12 +188,12 @@ class MainActivity : AppCompatActivity() {
         val milliTime = calendar.timeInMillis
         calendarView.setDate (milliTime, true, true)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            timePicker1.hour = setOldHour!!.toInt()
-            timePicker1.minute = setOldMinute!!.toInt()
-        } else {
-            timePicker1.currentHour = setOldHour!!.toInt()
-            timePicker1.currentMinute = setOldMinute!!.toInt()
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            timePicker1.hour = setOldHour!!.toInt()
+//            timePicker1.minute = setOldMinute!!.toInt()
+//        } else {
+//            timePicker1.currentHour = setOldHour!!.toInt()
+//            timePicker1.currentMinute = setOldMinute!!.toInt()
+//        }
     }
 }
