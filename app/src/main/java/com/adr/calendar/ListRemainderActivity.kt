@@ -1,10 +1,14 @@
 package com.adr.calendar
 
 import android.app.AlertDialog
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.widget.Toast
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
 import com.adr.calendar.com.adr.calendar.dbLocal.EventTableDatabase
 import kotlinx.android.synthetic.main.activity_list_remainder.*
@@ -14,7 +18,8 @@ import kotlinx.coroutines.launch
 class ListRemainderActivity : BaseActivity(){
 
     private var recycleVAdapter: RecycleVAdapter? = null
-    private var eventTable: EventTable? = null
+    //private var eventTable: EventTable? =
+//    private var adapterRV
     var selectedEventID = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,27 +28,44 @@ class ListRemainderActivity : BaseActivity(){
 
 //        recycleVAdapter = RecycleVAdapter()
 
-//        adapterRV = RecycleVAdapter(this, eventTable)
+//        val adapterRV = RecycleVAdapter(, this).selectedDataID
         recycleView.layoutManager = LinearLayoutManager(this)
+
         launch{
             val eventTable = EventTableDatabase(this@ListRemainderActivity).getEventTableDao().getAllData()
-            recycleView.adapter = RecycleVAdapter(eventTable, this@ListRemainderActivity)
+
+            recycleVAdapter = RecycleVAdapter(eventTable, this@ListRemainderActivity) { event ->
+                deleteData(event)
+            }
+
+            recycleView.adapter = recycleVAdapter
+//            recycleVAdapter?.notifyDataSetChanged()
         }
 
-        buttonDeleteTest.setOnClickListener {
-            deleteData()
+//        recycleVAdapter?.notifyDataSetChanged()
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+            IntentFilter("eventID-to-delete"))
+    }
+
+    private var mMessageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(
+            context: Context?,
+            intent: Intent
+        ) {
+            selectedEventID = intent.getIntExtra("selectedDataID", 0)
         }
     }
 
-    private fun deleteData(){
-//        val eventID = RecycleVAdapter(View)
+    private fun deleteData(eventTable: EventTable){
         AlertDialog.Builder(this).apply {
             setTitle("Are you sure?")
             setMessage("You cannot undo this operation")
             setPositiveButton("Yes"){_, _ ->
                 launch {
-                    EventTableDatabase(this@ListRemainderActivity).getEventTableDao().deleteData(eventTable!!)
+                    EventTableDatabase(this@ListRemainderActivity).getEventTableDao().deleteData(eventTable)
                 }
+                Toast.makeText(this@ListRemainderActivity, "$selectedEventID", Toast.LENGTH_SHORT).show()
             }
             setNegativeButton("No"){_, _ ->
             }
