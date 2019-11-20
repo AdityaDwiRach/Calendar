@@ -65,7 +65,11 @@ class ListRemainderActivity : BaseActivity(){
                 launch {
                     EventTableDatabase(this@ListRemainderActivity).getEventTableDao().deleteData(eventTable)
                 }
-                Toast.makeText(this@ListRemainderActivity, "$selectedEventID", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this@ListRemainderActivity, "$selectedEventID", Toast.LENGTH_SHORT).show()
+                startActivity(intent)
+                finish()
+                overridePendingTransition(0, 0)
+//                overridePendingTransition(0, 2)
             }
             setNegativeButton("No"){_, _ ->
             }
