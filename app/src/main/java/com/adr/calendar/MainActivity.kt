@@ -1,31 +1,22 @@
 package com.adr.calendar
 
+import android.app.AlarmManager
 import android.app.AlertDialog
+import android.app.PendingIntent
 import android.content.Context
-import android.os.Build
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
+import com.adr.calendar.com.adr.calendar.dbLocal.EventTableDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.select_time.view.*
-import java.util.*
-import android.content.DialogInterface
-import android.content.Intent
-import android.widget.CheckBox
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.provider.SyncStateContract.Helpers.update
-import com.adr.calendar.com.adr.calendar.dbLocal.EventTableDatabase
-import kotlinx.android.synthetic.main.select_time.*
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 class MainActivity : BaseActivity() {
@@ -137,19 +128,19 @@ class MainActivity : BaseActivity() {
             val time = pickers.findViewById(R.id.timePicker1) as TimePicker
             time.is24HourView
             dialog.setView(pickers)
-            dialog.setPositiveButton("Ok") { dialog, which ->
+            dialog.setPositiveButton("Ok") { dialog, _ ->
                 time.clearFocus()
 //                Notification.getTime(hour, minute, repeat_daily.isChecked)
 //                Notification.scheduleNotification(this@AgendaActivity, 1)
             }
             dialog.setNegativeButton(
                 "Cancel"
-            ) { dialog, which -> dialog.dismiss() }
+            ) { dialog, _ -> dialog.dismiss() }
 
             val alertDialog = dialog.create()
             alertDialog.show()
 
-            time.setOnTimeChangedListener { view, hourOfDay, minute ->
+            time.setOnTimeChangedListener { _, hourOfDay, minute ->
                 currentHour = hourOfDay
                 currentMinute = minute
             }
@@ -158,6 +149,24 @@ class MainActivity : BaseActivity() {
                 Toast.makeText(this, "Selected time : $currentHour : $currentMinute", Toast.LENGTH_SHORT).show()
             }
 
+        }
+
+        buttonDeleteAll.setOnClickListener {
+            val calendar = Calendar.getInstance()
+//            val currentTime = System.currentTimeMillis()
+            //calendar.timeInMillis(currentTime)
+            calendar.set(2019,10,22,17,50, 0)
+
+//            val i = 5
+            val intent = Intent(this@MainActivity, AlarmBroadcastReceiver::class.java)
+            val pendingIntent =
+                PendingIntent.getBroadcast(this@MainActivity, 23424243, intent, 0)
+            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+            alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] =
+                pendingIntent
+
+//            Toast.makeText(this@MainActivity, "Alarm set in $i seconds", Toast.LENGTH_LONG)
+//                .show()
         }
     }
 

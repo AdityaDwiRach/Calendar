@@ -26,9 +26,6 @@ class ListRemainderActivity : BaseActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_remainder)
 
-//        recycleVAdapter = RecycleVAdapter()
-
-//        val adapterRV = RecycleVAdapter(, this).selectedDataID
         recycleView.layoutManager = LinearLayoutManager(this)
 
         launch{
@@ -39,7 +36,7 @@ class ListRemainderActivity : BaseActivity(){
             }
 
             recycleView.adapter = recycleVAdapter
-//            recycleVAdapter?.notifyDataSetChanged()
+            recycleVAdapter?.notifyDataSetChanged()
         }
 
 //        recycleVAdapter?.notifyDataSetChanged()
