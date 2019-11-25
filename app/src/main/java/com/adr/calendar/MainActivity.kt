@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.select_time.view.*
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : BaseActivity() {
@@ -35,7 +36,10 @@ class MainActivity : BaseActivity() {
     private var currentHour = 0
     private var currentMinute = 0
     private var statusUpdate = false
+    private var requestCode = 0
     var time:TimePicker? = null
+
+    val test = arrayListOf<EventTable>()
 
     //cari cara untuk locaization array
     private var arrayOfMonth = arrayOf("January", "February", "March", "April", "Mei", "June", "July", "August", "September", "October", "November", "December")
@@ -89,21 +93,21 @@ class MainActivity : BaseActivity() {
                 val year = currentYear.toString()
                 val hour = currentHour.toString()
                 val minute = currentMinute.toString()
-                val timeFull = "$date $month $year $hour : $minute"
+                val requestCode = requestCode++
                 val eventName = currentEventName.toString()
-                val mEventTable = EventTable(date, month, year, eventName, hour, minute, timeFull)
+                val mEventTable = EventTable(date, month, year, eventName, hour, minute, requestCode.toString())
                 EventTableDatabase(this@MainActivity).getEventTableDao().addData(mEventTable)
                 Toast.makeText(this@MainActivity, "Data saved", Toast.LENGTH_SHORT).show()
             }
 
-//            val calendar = Calendar.getInstance()
-//            calendar.set(currentYear,currentMonth,currentDayOfMonth,currentHour,currentMinute, 0)
-//
-//            val intent = Intent(this@MainActivity, AlarmBroadcastReceiver::class.java)
-//            val pendingIntent =
-//                PendingIntent.getBroadcast(this@MainActivity, 23424243, intent, 0)
-//            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-//            alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] = pendingIntent
+            val calendar = Calendar.getInstance()
+            calendar.set(currentYear,currentMonth,currentDayOfMonth,currentHour,currentMinute, 0)
+
+            val intent = Intent(this@MainActivity, AlarmBroadcastReceiver::class.java)
+            val pendingIntent =
+                PendingIntent.getBroadcast(this@MainActivity, 23424243, intent, 0)
+            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+            alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] = pendingIntent
 
             clearData()
         }
@@ -121,9 +125,9 @@ class MainActivity : BaseActivity() {
                 val year = currentYear.toString()
                 val hour = currentHour.toString()
                 val minute = currentMinute.toString()
-                val timeFull = "$date $month $year $hour : $minute"
+                val requestCode = requestCode++
                 val eventName = currentEventName.toString()
-                val mEventTable = EventTable(date, month, year, eventName, hour, minute, timeFull)
+                val mEventTable = EventTable(date, month, year, eventName, hour, minute, requestCode.toString())
                 mEventTable.id = oldID
                 EventTableDatabase(it.context).getEventTableDao().updateData(mEventTable)
                 Toast.makeText(it.context, "Data updated", Toast.LENGTH_SHORT).show()

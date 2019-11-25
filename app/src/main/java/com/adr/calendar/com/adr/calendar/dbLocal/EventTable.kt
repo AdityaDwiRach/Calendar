@@ -12,7 +12,7 @@ data class EventTable(
     val event_name: String,
     val hour: String,
     val minute: String,
-    val time_full: String
+    val request_code: String
 ):Serializable{
     @PrimaryKey(autoGenerate = true)
     var id : Int = 0

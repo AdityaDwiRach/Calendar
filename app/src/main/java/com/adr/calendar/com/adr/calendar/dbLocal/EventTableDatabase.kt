@@ -25,7 +25,8 @@ abstract class EventTableDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) = Room.databaseBuilder(
             context.applicationContext,
             EventTableDatabase::class.java,
-            "eventTableDatabase"
-        ).build()
+            "eventTableDatabase")
+            .build()
+//            .addMigrations(MIGRATION_1_2)
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,8 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
 //    private var eventTable: EventTable? = null
 
     var selectedDataID = 0
+
+    var selectedDataRequestCode: String? = null
 
 //    override val coroutineContext: CoroutineContext
 //        get() = job + Dispatchers.Main
@@ -37,9 +40,9 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
 //        itemPosition = position
 
         holder.itemView.setOnClickListener {
-//            selectedDataID = holder.eventID!!
-//            Toast.makeText(context, holder.eventID.toString(), Toast.LENGTH_SHORT).show()
-//
+            selectedDataRequestCode = holder.eventRequestCode
+            Toast.makeText(context, selectedDataRequestCode, Toast.LENGTH_SHORT).show()
+
 //            val intent = Intent("eventID-to-delete")
 //            intent.putExtra("selectedDataID", selectedDataID)
 //            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
@@ -70,14 +73,14 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
 //        notifyDataSetChanged()
 //    }
 
-    fun updateData(newEventTable: List<EventTable>){
-        val diffCallback = DiffUtilCallback(items, newEventTable)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        diffResult.dispatchUpdatesTo(this)
-        items = newEventTable
-
-//        this.items = newEventTable
-    }
+//    fun updateData(newEventTable: List<EventTable>){
+//        val diffCallback = DiffUtilCallback(items, newEventTable)
+//        val diffResult = DiffUtil.calculateDiff(diffCallback)
+//        diffResult.dispatchUpdatesTo(this)
+//        items = newEventTable
+//
+////        this.items = newEventTable
+//    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -88,6 +91,7 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
         var eventHour : String? = null
         var eventMinute : String? = null
         var eventID : Int? = null
+        var eventRequestCode : String? = null
 
         fun bindItems(
             items: EventTable
@@ -106,6 +110,7 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
             eventHour = items.hour
             eventMinute = items.minute
             eventID = items.id
+            eventRequestCode = items.request_code
         }
 
 

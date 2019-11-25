@@ -7,7 +7,7 @@ interface EventTableDao {
     @Insert
     suspend fun addData(eventTable: EventTable)
 
-    @Query("SELECT * FROM eventtable ORDER BY time_full DESC")
+    @Query("SELECT * FROM eventtable ORDER BY request_code DESC")
     suspend fun getAllData() : List<EventTable>
 
     @Insert

@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -22,7 +21,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         notificationManager = NotificationManagerCompat.from(context)
         createNotificationChannels(context)
         notificationBuild(context)
-        Toast.makeText(context, "Alarm Started", Toast.LENGTH_LONG).show()
+//        Toast.makeText(context, "Alarm Started", Toast.LENGTH_LONG).show()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -48,7 +47,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     private fun notificationBuild(context: Context){
         val notification = NotificationCompat.Builder(context, CHANNEL_1_ID)
             .setSmallIcon(R.drawable.ic_launcher_background)
-            .setContentTitle("Testiiing notifikasi")
+            .setContentTitle("Calendar Notification")
             .setContentText("LED Test")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
