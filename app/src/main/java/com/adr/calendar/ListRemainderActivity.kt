@@ -66,7 +66,7 @@ class ListRemainderActivity : BaseActivity(){
 //                recycleVAdapter?.updateData(listOf(eventTable))
 
                 finish()
-                overridePendingTransition(R.anim.fade_in, 0)
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                 startActivity(intent)
             }
             setNegativeButton("No"){_, _ ->
