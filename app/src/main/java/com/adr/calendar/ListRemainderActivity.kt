@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class ListRemainderActivity : BaseActivity(){
 
     private var recycleVAdapter: RecycleVAdapter? = null
-    //private var eventTable: EventTable? =
+    private var eventTable: EventTable? = null
 //    private var adapterRV
     var selectedEventID = 0
 
@@ -36,13 +36,13 @@ class ListRemainderActivity : BaseActivity(){
             }
 
             recycleView.adapter = recycleVAdapter
-            recycleVAdapter?.notifyDataSetChanged()
+//            recycleVAdapter?.notifyDataSetChanged()
         }
 
 //        recycleVAdapter?.notifyDataSetChanged()
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-            IntentFilter("eventID-to-delete"))
+//        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+//            IntentFilter("eventID-to-delete"))
     }
 
     private var mMessageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -62,11 +62,12 @@ class ListRemainderActivity : BaseActivity(){
                 launch {
                     EventTableDatabase(this@ListRemainderActivity).getEventTableDao().deleteData(eventTable)
                 }
-//                Toast.makeText(this@ListRemainderActivity, "$selectedEventID", Toast.LENGTH_SHORT).show()
-                startActivity(intent)
+//                val eventTable = List<EventTable>()()
+//                recycleVAdapter?.updateData(listOf(eventTable))
+
                 finish()
-                overridePendingTransition(0, 0)
-//                overridePendingTransition(0, 2)
+                overridePendingTransition(R.anim.fade_in, 0)
+                startActivity(intent)
             }
             setNegativeButton("No"){_, _ ->
             }

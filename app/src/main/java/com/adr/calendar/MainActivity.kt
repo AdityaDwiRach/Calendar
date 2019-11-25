@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,6 +35,7 @@ class MainActivity : BaseActivity() {
     private var currentHour = 0
     private var currentMinute = 0
     private var statusUpdate = false
+    var time:TimePicker? = null
 
     //cari cara untuk locaization array
     private var arrayOfMonth = arrayOf("January", "February", "March", "April", "Mei", "June", "July", "August", "September", "October", "November", "December")
@@ -71,7 +73,7 @@ class MainActivity : BaseActivity() {
 
         Log.i("Testiiiing", currentDate.toString())
 
-        calendarView.setOnDateChangeListener{ view, year, month, dayOfMonth ->
+        calendarView.setOnDateChangeListener{ _, year, month, dayOfMonth ->
             val msg = "Selected date is " + dayOfMonth + "/" + (month + 1) + "/" + year
             Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
             currentDayOfMonth = dayOfMonth
@@ -81,7 +83,6 @@ class MainActivity : BaseActivity() {
 
         buttonSave.setOnClickListener{
             currentEventName = editTextEventName.text.toString()
-//            addData()
             launch {
                 val date = currentDayOfMonth.toString()
                 val month = arrayOfMonth[currentMonth]
@@ -94,7 +95,16 @@ class MainActivity : BaseActivity() {
                 EventTableDatabase(this@MainActivity).getEventTableDao().addData(mEventTable)
                 Toast.makeText(this@MainActivity, "Data saved", Toast.LENGTH_SHORT).show()
             }
-            Toast.makeText(this, currentHour.toString() + currentMinute.toString(), Toast.LENGTH_SHORT).show()
+
+//            val calendar = Calendar.getInstance()
+//            calendar.set(currentYear,currentMonth,currentDayOfMonth,currentHour,currentMinute, 0)
+//
+//            val intent = Intent(this@MainActivity, AlarmBroadcastReceiver::class.java)
+//            val pendingIntent =
+//                PendingIntent.getBroadcast(this@MainActivity, 23424243, intent, 0)
+//            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+//            alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] = pendingIntent
+
             clearData()
         }
         
@@ -125,13 +135,12 @@ class MainActivity : BaseActivity() {
             val dialog = AlertDialog.Builder(this)
             val layoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val pickers = layoutInflater.inflate(R.layout.select_time, null)
-            val time = pickers.findViewById(R.id.timePicker1) as TimePicker
-            time.is24HourView
+            time = pickers.findViewById(R.id.timePicker1) as TimePicker
+            time?.setIs24HourView(true)
             dialog.setView(pickers)
             dialog.setPositiveButton("Ok") { dialog, _ ->
-                time.clearFocus()
-//                Notification.getTime(hour, minute, repeat_daily.isChecked)
-//                Notification.scheduleNotification(this@AgendaActivity, 1)
+                time?.clearFocus()
+                Toast.makeText(this, "Selected time : $currentHour : $currentMinute", Toast.LENGTH_SHORT).show()
             }
             dialog.setNegativeButton(
                 "Cancel"
@@ -140,33 +149,22 @@ class MainActivity : BaseActivity() {
             val alertDialog = dialog.create()
             alertDialog.show()
 
-            time.setOnTimeChangedListener { _, hourOfDay, minute ->
+            time?.setOnTimeChangedListener { _, hourOfDay, minute ->
                 currentHour = hourOfDay
                 currentMinute = minute
             }
-
-            pickers.buttonCheck.setOnClickListener {
-                Toast.makeText(this, "Selected time : $currentHour : $currentMinute", Toast.LENGTH_SHORT).show()
-            }
-
         }
 
         buttonDeleteAll.setOnClickListener {
-            val calendar = Calendar.getInstance()
-//            val currentTime = System.currentTimeMillis()
-            //calendar.timeInMillis(currentTime)
-            calendar.set(2019,10,22,17,50, 0)
-
-//            val i = 5
-            val intent = Intent(this@MainActivity, AlarmBroadcastReceiver::class.java)
-            val pendingIntent =
-                PendingIntent.getBroadcast(this@MainActivity, 23424243, intent, 0)
-            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-            alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] =
-                pendingIntent
-
-//            Toast.makeText(this@MainActivity, "Alarm set in $i seconds", Toast.LENGTH_LONG)
-//                .show()
+//            val calendar = Calendar.getInstance()
+//            calendar.set(2019,10,22,17,50, 0)
+//
+//            val intent = Intent(this@MainActivity, AlarmBroadcastReceiver::class.java)
+//            val pendingIntent =
+//                PendingIntent.getBroadcast(this@MainActivity, 23424243, intent, 0)
+//            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+//            alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] =
+//                pendingIntent
         }
     }
 
@@ -197,12 +195,12 @@ class MainActivity : BaseActivity() {
         val milliTime = calendar.timeInMillis
         calendarView.setDate (milliTime, true, true)
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            timePicker1.hour = setOldHour!!.toInt()
-//            timePicker1.minute = setOldMinute!!.toInt()
-//        } else {
-//            timePicker1.currentHour = setOldHour!!.toInt()
-//            timePicker1.currentMinute = setOldMinute!!.toInt()
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            time?.hour = setOldHour!!.toInt()
+            time?.minute = setOldMinute!!.toInt()
+        } else {
+            time?.currentHour = setOldHour!!.toInt()
+            time?.currentMinute = setOldMinute!!.toInt()
+        }
     }
 }

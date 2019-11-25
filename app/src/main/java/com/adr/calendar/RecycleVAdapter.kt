@@ -5,27 +5,18 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
-import com.adr.calendar.com.adr.calendar.dbLocal.EventTableDatabase
 import kotlinx.android.synthetic.main.event_list.view.*
 
 
-class RecycleVAdapter(val items : List<EventTable>, val context: Context, val item: (event: EventTable) -> Unit) : RecyclerView.Adapter<RecycleVAdapter.ViewHolder>(){
-//    , CoroutineScope{
-
-//    lateinit var job: Job
+class RecycleVAdapter(var items : List<EventTable>, val context: Context, val item: (event: EventTable) -> Unit) : RecyclerView.Adapter<RecycleVAdapter.ViewHolder>(){
 
     var itemPosition = 0
 
-//    private val itemTest = arrayListOf<EventTable>()
-
-//    val ArrayList<EventTable>
-
-    private var eventTable: EventTable? = null
+//    private var eventTable: EventTable? = null
 
     var selectedDataID = 0
 
@@ -43,29 +34,20 @@ class RecycleVAdapter(val items : List<EventTable>, val context: Context, val it
 
         holder.bindItems(items[position])
 
-        itemPosition = position
+//        itemPosition = position
 
         holder.itemView.setOnClickListener {
-            selectedDataID = holder.eventID!!
-            Toast.makeText(context, holder.eventID.toString(), Toast.LENGTH_SHORT).show()
-
-            val intent = Intent("eventID-to-delete")
-            intent.putExtra("selectedDataID", selectedDataID)
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+//            selectedDataID = holder.eventID!!
+//            Toast.makeText(context, holder.eventID.toString(), Toast.LENGTH_SHORT).show()
+//
+//            val intent = Intent("eventID-to-delete")
+//            intent.putExtra("selectedDataID", selectedDataID)
+//            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
         }
 
         holder.itemView.deleteButton.setOnClickListener{
             item.invoke(items[position])
-//            itemTest.remove(1)
-
-//            itemTest.removeAt(1)
-            notifyDataSetChanged()
-//            (context as ListRemainderActivity).deleteData(eventTable!!)
-            //deleteAction.invoke()
-            //holder.eventID
-//            notifyItemRemoved(position)
-//            db.delete()
-//            deleteData()
+//            notifyDataSetChanged()
         }
 
         holder.itemView.editButton.setOnClickListener {
@@ -82,6 +64,20 @@ class RecycleVAdapter(val items : List<EventTable>, val context: Context, val it
         }
 
     }
+//
+//    fun updateData(newEventTable: List<EventTable>){
+//        this.items = newEventTable
+//        notifyDataSetChanged()
+//    }
+
+    fun updateData(newEventTable: List<EventTable>){
+        val diffCallback = DiffUtilCallback(items, newEventTable)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
+        items = newEventTable
+
+//        this.items = newEventTable
+    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -93,7 +89,9 @@ class RecycleVAdapter(val items : List<EventTable>, val context: Context, val it
         var eventMinute : String? = null
         var eventID : Int? = null
 
-        fun bindItems(items: EventTable){
+        fun bindItems(
+            items: EventTable
+        ){
             itemView.eventDate.text = items.date
             itemView.eventMonth.text = items.month
             itemView.eventYear.text = items.year
@@ -108,10 +106,6 @@ class RecycleVAdapter(val items : List<EventTable>, val context: Context, val it
             eventHour = items.hour
             eventMinute = items.minute
             eventID = items.id
-
-            itemView.deleteButton.setOnClickListener {
-
-            }
         }
 
 

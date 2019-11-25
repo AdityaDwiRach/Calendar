@@ -9,17 +9,4 @@
         android:layout_height="wrap_content"
         android:timePickerMode="clock"
         android:layout_marginTop="40dp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="CHECK"
-        android:id="@+id/buttonCheck"/>
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/textView"/>-->
-
-
 </LinearLayout>
