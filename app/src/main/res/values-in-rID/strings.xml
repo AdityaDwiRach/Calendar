@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Calendar</string>
+    <string name="august">Agustus</string>
+    <string name="december">Desember</string>
+    <string name="february">Februari</string>
+    <string name="january">Januari</string>
+    <string name="july">Juli</string>
+    <string name="june">Juni</string>
+    <string name="march">Maret</string>
+    <string name="may">Mei</string>
+    <string name="november">November</string>
+    <string name="october">Oktober</string>
+    <string name="september">September</string>
+</resources>

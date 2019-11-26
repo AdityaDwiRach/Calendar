@@ -12,8 +12,8 @@ import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
-import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
 import com.adr.calendar.com.adr.calendar.dbLocal.EventTableDatabase
+import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.select_time.view.*
 import kotlinx.coroutines.launch
@@ -36,15 +36,16 @@ class MainActivity : BaseActivity() {
     private var currentHour = 0
     private var currentMinute = 0
     private var statusUpdate = false
-    private var requestCode = 0
+    private var requestCodeIDGen = 0
     var time:TimePicker? = null
 
+    var test2 = 0
+
     val test = arrayListOf<EventTable>()
+    
+    private var arrayOfMonth = resources.getStringArray(R.array.months)
+//        arrayOf("January", "February", "March", "April", "Mei", "June", "July", "August", "September", "October", "November", "December")
 
-    //cari cara untuk locaization array
-    private var arrayOfMonth = arrayOf("January", "February", "March", "April", "Mei", "June", "July", "August", "September", "October", "November", "December")
-
-    private var eventTable: EventTable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,15 +88,18 @@ class MainActivity : BaseActivity() {
 
         buttonSave.setOnClickListener{
             currentEventName = editTextEventName.text.toString()
+//            val getRequestCode = requestCodeID++
             launch {
                 val date = currentDayOfMonth.toString()
                 val month = arrayOfMonth[currentMonth]
                 val year = currentYear.toString()
                 val hour = currentHour.toString()
                 val minute = currentMinute.toString()
-                val requestCode = requestCode++
+                val requestCodeID = requestCodeIDGen++
+                requestCodeIDGen = requestCodeID
                 val eventName = currentEventName.toString()
-                val mEventTable = EventTable(date, month, year, eventName, hour, minute, requestCode.toString())
+                val mEventTable = EventTable(date,
+                    month.toString(), year, eventName, hour, minute,requestCodeID)
                 EventTableDatabase(this@MainActivity).getEventTableDao().addData(mEventTable)
                 Toast.makeText(this@MainActivity, "Data saved", Toast.LENGTH_SHORT).show()
             }
@@ -125,9 +129,10 @@ class MainActivity : BaseActivity() {
                 val year = currentYear.toString()
                 val hour = currentHour.toString()
                 val minute = currentMinute.toString()
-                val requestCode = requestCode++
+                val requestCodeID = requestCodeIDGen++
+                requestCodeIDGen = requestCodeID
                 val eventName = currentEventName.toString()
-                val mEventTable = EventTable(date, month, year, eventName, hour, minute, requestCode.toString())
+                val mEventTable = EventTable(date, month.toString(), year, eventName, hour, minute,requestCodeID)
                 mEventTable.id = oldID
                 EventTableDatabase(it.context).getEventTableDao().updateData(mEventTable)
                 Toast.makeText(it.context, "Data updated", Toast.LENGTH_SHORT).show()
@@ -142,7 +147,7 @@ class MainActivity : BaseActivity() {
             time = pickers.findViewById(R.id.timePicker1) as TimePicker
             time?.setIs24HourView(true)
             dialog.setView(pickers)
-            dialog.setPositiveButton("Ok") { dialog, _ ->
+            dialog.setPositiveButton("Ok") { _, _ ->
                 time?.clearFocus()
                 Toast.makeText(this, "Selected time : $currentHour : $currentMinute", Toast.LENGTH_SHORT).show()
             }
@@ -169,6 +174,20 @@ class MainActivity : BaseActivity() {
 //            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 //            alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] =
 //                pendingIntent
+            getRequestCode()
+//            val test =
+//            Toast.makeText(this, test2, Toast.LENGTH_SHORT).show()
+//            for()
+        }
+    }
+
+    private fun getRequestCode(){
+        launch {
+            val test3 = EventTableDatabase(this@MainActivity).getEventTableDao().getAllRequestCode()
+            test2 = test3[1]
+            for (i in test3){
+                Log.i("Testiiiiiing", i.toString())
+            }
         }
     }
 

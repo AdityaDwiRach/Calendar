@@ -9,8 +9,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
 import com.adr.calendar.com.adr.calendar.dbLocal.EventTableDatabase
+import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
 import kotlinx.android.synthetic.main.activity_list_remainder.*
 import kotlinx.coroutines.launch
 
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class ListRemainderActivity : BaseActivity(){
 
     private var recycleVAdapter: RecycleVAdapter? = null
-    private var eventTable: EventTable? = null
+//    private var eventTable: EventTable? = null
 //    private var adapterRV
     var selectedEventID = 0
 

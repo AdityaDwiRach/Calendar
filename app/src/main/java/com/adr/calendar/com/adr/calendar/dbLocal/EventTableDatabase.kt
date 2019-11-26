@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [EventTable::class], version = 1)
+@Database(entities = [EventTable::class], version = 3)
 
 abstract class EventTableDatabase : RoomDatabase() {
 
@@ -26,6 +26,7 @@ abstract class EventTableDatabase : RoomDatabase() {
             context.applicationContext,
             EventTableDatabase::class.java,
             "eventTableDatabase")
+            .addMigrations(MIGRATION_2_3)
             .build()
 //            .addMigrations(MIGRATION_1_2)
     }

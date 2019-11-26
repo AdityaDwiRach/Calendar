@@ -21,7 +21,7 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
 
     var selectedDataID = 0
 
-    var selectedDataRequestCode: String? = null
+    var selectedDataRequestCode: Int = 0
 
 //    override val coroutineContext: CoroutineContext
 //        get() = job + Dispatchers.Main
@@ -40,8 +40,8 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
 //        itemPosition = position
 
         holder.itemView.setOnClickListener {
-            selectedDataRequestCode = holder.eventRequestCode
-            Toast.makeText(context, selectedDataRequestCode, Toast.LENGTH_SHORT).show()
+            selectedDataRequestCode = holder.eventRequestCodeID
+            Toast.makeText(context, selectedDataRequestCode.toString(), Toast.LENGTH_SHORT).show()
 
 //            val intent = Intent("eventID-to-delete")
 //            intent.putExtra("selectedDataID", selectedDataID)
@@ -91,7 +91,7 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
         var eventHour : String? = null
         var eventMinute : String? = null
         var eventID : Int? = null
-        var eventRequestCode : String? = null
+        var eventRequestCodeID : Int = 0
 
         fun bindItems(
             items: EventTable
@@ -110,7 +110,7 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
             eventHour = items.hour
             eventMinute = items.minute
             eventID = items.id
-            eventRequestCode = items.request_code
+            eventRequestCodeID = items.request_code_id
         }
 
 
