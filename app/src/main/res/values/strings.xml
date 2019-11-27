@@ -6,6 +6,7 @@
     <string name="january">January</string>
     <string name="february">February</string>
     <string name="march">March</string>
+    <string name="april">April</string>
     <string name="may">May</string>
     <string name="june">June</string>
     <string name="july">July</string>
@@ -19,6 +20,7 @@
         <item>@string/january</item>
         <item>@string/february</item>
         <item>@string/march</item>
+        <item>@string/april</item>
         <item>@string/may</item>
         <item>@string/june</item>
         <item>@string/july</item>

@@ -39,17 +39,20 @@ class MainActivity : BaseActivity() {
     private var requestCodeIDGen = 0
     var time:TimePicker? = null
 
-    var test2 = 0
+    var listRequestCode : List<Int>? = null
 
-    val test = arrayListOf<EventTable>()
-    
-    private var arrayOfMonth = resources.getStringArray(R.array.months)
+//    val test = arrayListOf<EventTable>()
+
+    private var arrayOfMonth : Array<String>? = null
+//            = (resources.getStringArray(R.array.months))
 //        arrayOf("January", "February", "March", "April", "Mei", "June", "July", "August", "September", "October", "November", "December")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        arrayOfMonth = resources.getStringArray(R.array.months)
 
         val oldDate = intent.getStringExtra("oldDate")
         val oldMonth = intent.getStringExtra("oldMonth")
@@ -75,8 +78,17 @@ class MainActivity : BaseActivity() {
         }
 
         currentDate = calendarView.date
+//
+//        Log.i("Testiiiing", currentDate.toString())
 
-        Log.i("Testiiiing", currentDate.toString())
+        val calendar = Calendar.getInstance()
+        currentYear = calendar.get(Calendar.YEAR)
+        currentMonth = calendar.get(Calendar.MONTH)
+        currentDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+
+        Log.i("Testiiiing", "Current date is : $currentDayOfMonth - $currentMonth - $currentYear")
+
+        getRequestCode()
 
         calendarView.setOnDateChangeListener{ _, year, month, dayOfMonth ->
             val msg = "Selected date is " + dayOfMonth + "/" + (month + 1) + "/" + year
@@ -88,14 +100,13 @@ class MainActivity : BaseActivity() {
 
         buttonSave.setOnClickListener{
             currentEventName = editTextEventName.text.toString()
-//            val getRequestCode = requestCodeID++
             launch {
                 val date = currentDayOfMonth.toString()
-                val month = arrayOfMonth[currentMonth]
+                val month = arrayOfMonth!![currentMonth]
                 val year = currentYear.toString()
                 val hour = currentHour.toString()
                 val minute = currentMinute.toString()
-                val requestCodeID = requestCodeIDGen++
+                val requestCodeID = requestCodeIDGen + 1
                 requestCodeIDGen = requestCodeID
                 val eventName = currentEventName.toString()
                 val mEventTable = EventTable(date,
@@ -114,6 +125,8 @@ class MainActivity : BaseActivity() {
             alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] = pendingIntent
 
             clearData()
+
+            Log.i("Testiiiing", currentMonth.toString())
         }
         
         buttonEventList.setOnClickListener{
@@ -125,11 +138,11 @@ class MainActivity : BaseActivity() {
             currentEventName = editTextEventName.text.toString()
             launch {
                 val date = currentDayOfMonth.toString()
-                val month = arrayOfMonth[currentMonth]
+                val month = arrayOfMonth!![currentMonth]
                 val year = currentYear.toString()
                 val hour = currentHour.toString()
                 val minute = currentMinute.toString()
-                val requestCodeID = requestCodeIDGen++
+                val requestCodeID = requestCodeIDGen + 1
                 requestCodeIDGen = requestCodeID
                 val eventName = currentEventName.toString()
                 val mEventTable = EventTable(date, month.toString(), year, eventName, hour, minute,requestCodeID)
@@ -174,20 +187,25 @@ class MainActivity : BaseActivity() {
 //            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 //            alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] =
 //                pendingIntent
-            getRequestCode()
+//            getRequestCode()
 //            val test =
 //            Toast.makeText(this, test2, Toast.LENGTH_SHORT).show()
 //            for()
+            Log.i("Testiiiiiing", requestCodeIDGen.toString())
         }
     }
 
     private fun getRequestCode(){
         launch {
-            val test3 = EventTableDatabase(this@MainActivity).getEventTableDao().getAllRequestCode()
-            test2 = test3[1]
-            for (i in test3){
-                Log.i("Testiiiiiing", i.toString())
-            }
+            listRequestCode = EventTableDatabase(this@MainActivity).getEventTableDao().getAllRequestCode()
+        }
+
+        if (listRequestCode.isNullOrEmpty()){
+            Log.e("MainActivity", "This List is empty")
+        } else {
+            val lastRequestCode = listRequestCode?.last()
+
+            requestCodeIDGen = lastRequestCode!!
         }
     }
 
@@ -207,12 +225,12 @@ class MainActivity : BaseActivity() {
     private fun setDateAfterUpdate(){
 
         val day = Integer.parseInt(setOldDate.toString())
-        val month = arrayOfMonth.indexOf(setOldMonth.toString())
+        val month = arrayOfMonth?.indexOf(setOldMonth.toString())
         val year = Integer.parseInt(setOldYear.toString())
 
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, year)
-        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.MONTH, month!!)
         calendar.set(Calendar.DAY_OF_MONTH, day)
 
         val milliTime = calendar.timeInMillis
