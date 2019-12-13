@@ -110,7 +110,7 @@ class MainActivity : BaseActivity() {
                 requestCodeIDGen = requestCodeID
                 val eventName = currentEventName.toString()
                 val mEventTable = EventTable(date,
-                    month.toString(), year, eventName, hour, minute,requestCodeID)
+                    month, year, eventName, hour, minute,requestCodeID)
                 EventTableDatabase(this@MainActivity).getEventTableDao().addData(mEventTable)
                 Toast.makeText(this@MainActivity, "Data saved", Toast.LENGTH_SHORT).show()
             }
@@ -119,6 +119,7 @@ class MainActivity : BaseActivity() {
             calendar.set(currentYear,currentMonth,currentDayOfMonth,currentHour,currentMinute, 0)
 
             val intent = Intent(this@MainActivity, AlarmBroadcastReceiver::class.java)
+            intent.putExtra("eventName", currentEventName.toString())
             val pendingIntent =
                 PendingIntent.getBroadcast(this@MainActivity, 23424243, intent, 0)
             val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
@@ -243,5 +244,10 @@ class MainActivity : BaseActivity() {
             time?.currentHour = setOldHour!!.toInt()
             time?.currentMinute = setOldMinute!!.toInt()
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

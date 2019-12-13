@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.widget.Toast
+import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.adr.calendar.com.adr.calendar.dbLocal.EventTableDatabase
@@ -21,6 +22,7 @@ class ListRemainderActivity : BaseActivity(){
 //    private var eventTable: EventTable? = null
 //    private var adapterRV
     var selectedEventID = 0
+    private var notificationId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,21 +38,13 @@ class ListRemainderActivity : BaseActivity(){
             }
 
             recycleView.adapter = recycleVAdapter
-//            recycleVAdapter?.notifyDataSetChanged()
         }
 
-//        recycleVAdapter?.notifyDataSetChanged()
+        val notificationManager = NotificationManagerCompat.from(this)
 
-//        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-//            IntentFilter("eventID-to-delete"))
-    }
-
-    private var mMessageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(
-            context: Context?,
-            intent: Intent
-        ) {
-            selectedEventID = intent.getIntExtra("selectedDataID", 0)
+        if (intent != null && intent.getStringExtra("IntentListRemainder") == "CloseNotification"){
+            notificationId = intent.getIntExtra("IntentListRemainder", 0)
+            notificationManager.cancel(notificationId)
         }
     }
 
@@ -62,9 +56,6 @@ class ListRemainderActivity : BaseActivity(){
                 launch {
                     EventTableDatabase(this@ListRemainderActivity).getEventTableDao().deleteData(eventTable)
                 }
-//                val eventTable = List<EventTable>()()
-//                recycleVAdapter?.updateData(listOf(eventTable))
-
                 finish()
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                 startActivity(intent)
