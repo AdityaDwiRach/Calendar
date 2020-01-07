@@ -245,9 +245,4 @@ class MainActivity : BaseActivity() {
             time?.currentMinute = setOldMinute!!.toInt()
         }
     }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-    }
 }

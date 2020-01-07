@@ -43,6 +43,7 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
             selectedDataRequestCode = holder.eventRequestCodeID
             Toast.makeText(context, selectedDataRequestCode.toString(), Toast.LENGTH_SHORT).show()
 
+
 //            val intent = Intent("eventID-to-delete")
 //            intent.putExtra("selectedDataID", selectedDataID)
 //            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
