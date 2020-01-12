@@ -1,13 +1,10 @@
 package com.adr.calendar
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
 import kotlinx.android.synthetic.main.event_list.view.*
@@ -55,16 +52,23 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
         }
 
         holder.itemView.editButton.setOnClickListener {
-            val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("oldDate", holder.eventDate)
-            intent.putExtra("oldMonth", holder.eventMonth)
-            intent.putExtra("oldYear", holder.eventYear)
-            intent.putExtra("oldEventName", holder.eventName)
-            intent.putExtra("oldHour", holder.eventHour)
-            intent.putExtra("oldMinute", holder.eventMinute)
-            intent.putExtra("oldID", holder.eventID)
-            intent.putExtra("statusUpdate", true)
-            startActivity(context, intent, null)
+            val date = holder.eventDate
+            val month = holder.eventMonth
+            val year = holder.eventYear
+            val hour = holder.eventHour
+            val minute = holder.eventMinute
+            val notes = holder.eventName
+            ListRemainderActivity().alertDialogCalendar(date, month, year, hour, minute, notes)
+//            val intent = Intent(context, MainActivity::class.java)
+//            intent.putExtra("oldDate", holder.eventDate)
+//            intent.putExtra("oldMonth", holder.eventMonth)
+//            intent.putExtra("oldYear", holder.eventYear)
+//            intent.putExtra("oldEventName", holder.eventName)
+//            intent.putExtra("oldHour", holder.eventHour)
+//            intent.putExtra("oldMinute", holder.eventMinute)
+//            intent.putExtra("oldID", holder.eventID)
+//            intent.putExtra("statusUpdate", true)
+//            startActivity(context, intent, null)
         }
 
     }
