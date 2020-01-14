@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <TimePicker
-        android:id="@+id/timePicker1"
+        android:id="@+id/time_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:timePickerMode="clock"

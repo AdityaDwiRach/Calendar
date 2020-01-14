@@ -1,6 +1,7 @@
 package com.adr.calendar
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,7 +59,20 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
             val hour = holder.eventHour
             val minute = holder.eventMinute
             val notes = holder.eventName
-            ListRemainderActivity().alertDialogCalendar(date, month, year, hour, minute, notes)
+            val id = holder.eventID
+
+            val sharedPreference =  context.getSharedPreferences("DATA",Context.MODE_PRIVATE)
+            val editor = sharedPreference.edit()
+            editor.putBoolean("Shared Preference", true)
+            editor.putString("date",date)
+            editor.putString("month",month)
+            editor.putString("year",year)
+            editor.putString("hour",hour)
+            editor.putString("minute",minute)
+            editor.putString("notes",notes)
+            editor.putInt("id", id!!)
+            editor.apply()
+//            ListRemainderActivity().alertDialogCalendar(date, month, year, hour, minute, notes, id)
 //            val intent = Intent(context, MainActivity::class.java)
 //            intent.putExtra("oldDate", holder.eventDate)
 //            intent.putExtra("oldMonth", holder.eventMonth)
@@ -105,7 +119,7 @@ class RecycleVAdapter(var items : List<EventTable>, val context: Context, val it
             itemView.eventMonth.text = items.month
             itemView.eventYear.text = items.year
             itemView.eventName.text = items.event_name
-            itemView.eventHour.text = items.hour
+            itemView.eventHour.text = "${items.hour} : "
             itemView.eventMinute.text = items.minute
 
             eventDate = items.date
