@@ -1,4 +1,4 @@
-package com.adr.calendar.com.adr.calendar.dbLocal
+package com.adr.remainder.dbLocal
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

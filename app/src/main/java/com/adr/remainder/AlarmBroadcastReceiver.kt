@@ -1,4 +1,4 @@
-package com.adr.calendar
+package com.adr.remainder
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -13,7 +13,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.ContextCompat.startActivity
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
     private var notificationManager: NotificationManagerCompat? = null

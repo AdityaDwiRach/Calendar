@@ -1,4 +1,4 @@
-package com.adr.calendar
+package com.adr.remainder
 
 import org.junit.Test
 

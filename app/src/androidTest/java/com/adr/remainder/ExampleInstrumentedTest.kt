@@ -1,4 +1,4 @@
-package com.adr.calendar
+package com.adr.remainder
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

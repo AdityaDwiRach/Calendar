@@ -1,4 +1,4 @@
-package com.adr.calendar
+package com.adr.remainder
 
 import android.app.AlarmManager
 import android.app.AlertDialog
@@ -9,16 +9,13 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
-import com.adr.calendar.com.adr.calendar.dbLocal.EventTableDatabase
-import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
+import com.adr.remainder.dbLocal.EventTableDatabase
+import com.adr.remainder.dbLocal.EventTable
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.select_time.view.*
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class MainActivity : BaseActivity() {
@@ -109,8 +106,10 @@ class MainActivity : BaseActivity() {
                 val requestCodeID = requestCodeIDGen + 1
                 requestCodeIDGen = requestCodeID
                 val eventName = currentEventName.toString()
-                val mEventTable = EventTable(date,
-                    month, year, eventName, hour, minute,requestCodeID)
+                val mEventTable = EventTable(
+                    date,
+                    month, year, eventName, hour, minute, requestCodeID
+                )
                 EventTableDatabase(this@MainActivity).getEventTableDao().addData(mEventTable)
                 Toast.makeText(this@MainActivity, "Data saved", Toast.LENGTH_SHORT).show()
             }
@@ -146,7 +145,15 @@ class MainActivity : BaseActivity() {
                 val requestCodeID = requestCodeIDGen + 1
                 requestCodeIDGen = requestCodeID
                 val eventName = currentEventName.toString()
-                val mEventTable = EventTable(date, month.toString(), year, eventName, hour, minute,requestCodeID)
+                val mEventTable = EventTable(
+                    date,
+                    month.toString(),
+                    year,
+                    eventName,
+                    hour,
+                    minute,
+                    requestCodeID
+                )
                 mEventTable.id = oldID
                 EventTableDatabase(it.context).getEventTableDao().updateData(mEventTable)
                 Toast.makeText(it.context, "Data updated", Toast.LENGTH_SHORT).show()
@@ -198,7 +205,8 @@ class MainActivity : BaseActivity() {
 
     private fun getRequestCode(){
         launch {
-            listRequestCode = EventTableDatabase(this@MainActivity).getEventTableDao().getAllRequestCode()
+            listRequestCode = EventTableDatabase(this@MainActivity)
+                .getEventTableDao().getAllRequestCode()
         }
 
         if (listRequestCode.isNullOrEmpty()){

@@ -1,13 +1,12 @@
-package com.adr.calendar
+package com.adr.remainder
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
+import com.adr.remainder.dbLocal.EventTable
 import kotlinx.android.synthetic.main.event_list.view.*
 
 

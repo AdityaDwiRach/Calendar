@@ -1,4 +1,4 @@
-package com.adr.calendar
+package com.adr.remainder
 
 import android.app.AlarmManager
 import android.app.AlertDialog
@@ -16,11 +16,9 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
-import com.adr.calendar.com.adr.calendar.dbLocal.EventTableDatabase
+import com.adr.remainder.dbLocal.EventTable
+import com.adr.remainder.dbLocal.EventTableDatabase
 import kotlinx.android.synthetic.main.activity_list_remainder.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.alert_dialog_time.*
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -76,7 +74,8 @@ class ListRemainderActivity : BaseActivity(){
         recycleView.layoutManager = LinearLayoutManager(this)
 
         launch{
-            val eventTable = EventTableDatabase(this@ListRemainderActivity).getEventTableDao().getAllData()
+            val eventTable = EventTableDatabase(this@ListRemainderActivity)
+                .getEventTableDao().getAllData()
 
             recycleVAdapter = RecycleVAdapter(eventTable, this@ListRemainderActivity) { event ->
                 deleteData(event)
@@ -105,7 +104,8 @@ class ListRemainderActivity : BaseActivity(){
             setMessage("You cannot undo this operation")
             setPositiveButton("Yes"){_, _ ->
                 launch {
-                    EventTableDatabase(this@ListRemainderActivity).getEventTableDao().deleteData(eventTable)
+                    EventTableDatabase(this@ListRemainderActivity)
+                        .getEventTableDao().deleteData(eventTable)
                 }
                 finish()
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
@@ -282,7 +282,15 @@ class ListRemainderActivity : BaseActivity(){
                 val requestCodeID = requestCodeIDGen + 1
                 requestCodeIDGen = requestCodeID
                 val eventName = currentEventName.toString()
-                val mEventTable = EventTable(date, month.toString(), year, eventName, hour, minute,requestCodeID)
+                val mEventTable = EventTable(
+                    date,
+                    month.toString(),
+                    year,
+                    eventName,
+                    hour,
+                    minute,
+                    requestCodeID
+                )
                 mEventTable.id = id
                 EventTableDatabase(applicationContext).getEventTableDao().updateData(mEventTable)
                 Toast.makeText(applicationContext, "Data updated", Toast.LENGTH_SHORT).show()
@@ -302,8 +310,10 @@ class ListRemainderActivity : BaseActivity(){
                 val requestCodeID = requestCodeIDGen + 1
                 requestCodeIDGen = requestCodeID
                 val eventName = currentEventName.toString()
-                val mEventTable = EventTable(date,
-                    month, year, eventName, hour, minute,requestCodeID)
+                val mEventTable = EventTable(
+                    date,
+                    month, year, eventName, hour, minute, requestCodeID
+                )
                 EventTableDatabase(applicationContext).getEventTableDao().addData(mEventTable)
                 Toast.makeText(applicationContext, "Data saved", Toast.LENGTH_SHORT).show()
             }

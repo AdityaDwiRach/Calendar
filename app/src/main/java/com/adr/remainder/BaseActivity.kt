@@ -1,4 +1,4 @@
-package com.adr.calendar
+package com.adr.remainder
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -1,4 +1,4 @@
-package com.adr.calendar.com.adr.calendar.dbLocal
+package com.adr.remainder.dbLocal
 
 import android.content.Context
 import androidx.room.Database
@@ -16,8 +16,12 @@ abstract class EventTableDatabase : RoomDatabase() {
 
         private  val LOCK = Any()
 
-        operator fun invoke(context: Context) = instance ?: synchronized(LOCK){
-            instance ?: buildDatabase(context).also{
+        operator fun invoke(context: Context) = instance
+            ?: synchronized(LOCK){
+            instance
+                ?: buildDatabase(
+                    context
+                ).also{
                 instance = it
             }
         }

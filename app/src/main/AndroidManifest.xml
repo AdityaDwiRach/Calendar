@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.adr.calendar">
+    package="com.adr.remainder">
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <application
@@ -10,15 +10,15 @@
         android:roundIcon="@mipmap/ic_calendar_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".ListRemainderActivity">
+        <activity android:name="com.adr.remainder.MainActivity"></activity>
+        <activity android:name="com.adr.remainder.ListRemainderActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AlarmBroadcastReceiver"/>
+        <receiver android:name="com.adr.remainder.AlarmBroadcastReceiver"/>
     </application>
 
 </manifest>

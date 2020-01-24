@@ -1,7 +1,7 @@
-package com.adr.calendar
+package com.adr.remainder
 
 import androidx.recyclerview.widget.DiffUtil
-import com.adr.calendar.com.adr.calendar.dbLocal.EventTable
+import com.adr.remainder.dbLocal.EventTable
 
 open class DiffUtilCallback(
     private val oldEventTable: List<EventTable>,
